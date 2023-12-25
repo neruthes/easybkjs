@@ -69,9 +69,9 @@ logline_formatters.html = function (bookObj, operation, subj1, subj2, amount1, a
     return `<tr>
         <td>${bookObj.ram.date}</td>
         <td>${operation}</td>
-        <td>${subj1} (${bookObj.config.symbol})</td>
+        <td>${subj1}</td>
         <td style="text-align: right;">${sanitize_amount(amount1, 2)}</td>
-        <td>${subj2} (${bookObj.config.symbol})</td>
+        <td>${subj2}</td>
         <td style="text-align: right;">${sanitize_amount(amount2, 2)}</td>
         <td>${comment}</td>
     </tr>`;
@@ -206,7 +206,25 @@ the_real_constructor.prototype.cashDump = function () {
         print_cashflow_group_info_html(group, group_obj.in, group_obj.out, group_obj.in - group_obj.out);
     });
 };
-the_real_constructor.prototype.cashflowReset = function () {};
+the_real_constructor.prototype.cashflowReset = function () { };
+
+
+
+the_real_constructor.prototype.html_table_footer = function () {
+    console.log(`</tbody></table>`);
+};
+the_real_constructor.prototype.html_table_header = function () {
+    console.log(`<table><tbody>`);
+    console.log(`<tr>
+        <td>Date</td>
+        <td>Operation</td>
+        <td>Subject 1</td>
+        <td>Amount 1 (${this.config.symbol})</td>
+        <td>Subject 2</td>
+        <td>Amount 2 (${this.config.symbol})</td>
+        <td>Comment</td>
+    </tr>`);
+};
 
 
 
@@ -216,21 +234,6 @@ the_real_constructor.prototype.cashflowReset = function () {};
 
 module.exports = {
     create,
-    html_table_header: function () {
-        console.log(`<table><tbody>`);
-        console.log(`<tr>
-            <td>Date</td>
-            <td>Operation</td>
-            <td>Subject 1</td>
-            <td>Amount 1</td>
-            <td>Subject 2</td>
-            <td>Amount 2</td>
-            <td>Comment</td>
-        </tr>`);
-    },
-    html_table_footer: function () {
-        console.log(`</tbody></table>`);
-    },
     html_tag: function (tag, content) {
         console.log(`<${tag}>${content}</${tag}>`);
     }

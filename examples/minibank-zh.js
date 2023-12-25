@@ -43,7 +43,7 @@ table td { padding: 2px 6px; }
 easybkjs.html_tag('h1', '某某钱庄');
 
 easybkjs.html_tag('h2', '2020 Q1');
-easybkjs.html_table_header();
+myBook.html_table_header();
 
 myBook.date('2020-01-01');
 myBook.expand('现金', '@所有者权益', 100, '钱庄成立');
@@ -53,7 +53,7 @@ myBook.expand('同业头寸', '储户.Bob', 900, '存入 1500，Bob');
 myBook.shrink('同业头寸', '储户.Alice', -1321.1, '支付，Alice：生活账单代缴');
 myBook.shrink('同业头寸', '储户.Bob', -37.5, '支付，Bob：消费，淘宝代付');
 
-easybkjs.html_table_footer();
+myBook.html_table_footer();
 
 
 myBook.date('2020-03-31');

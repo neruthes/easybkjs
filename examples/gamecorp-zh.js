@@ -43,7 +43,7 @@ easybkjs.html_tag('h1', 'Some Video Game Corporation');
 
 easybkjs.html_tag('h2', '2020 Q1');
 easybkjs.html_tag('h3', '2020 JAN');
-easybkjs.html_table_header();
+myBook.html_table_header();
 
 myBook.date('2020-01-01');
 myBook.expand('存款', '@所有者权益', 10000, '公司成立');
@@ -63,7 +63,7 @@ myBook.date('2020-03-01');
 myBook.expand('存款', '本期利润', 7148.51, 'Steam 平台分成，2020 年 01 月');
 myBook.cashIn(7148.51);
 
-easybkjs.html_table_footer();
+myBook.html_table_footer();
 
 
 myBook.date('2020-03-31');
