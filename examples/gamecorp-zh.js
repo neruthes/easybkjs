@@ -6,6 +6,8 @@ var myBook = easybkjs.create({
     symbol: '$'
 });
 
+easybkjs.html_before_body();
+
 
 myBook.import({
     assets: {
@@ -73,3 +75,9 @@ myBook.dump({ format: 'json' });
 
 myBook.cashDump();
 myBook.cashflowReset();
+
+
+
+
+easybkjs.html_after_body();
+

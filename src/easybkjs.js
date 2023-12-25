@@ -236,6 +236,21 @@ module.exports = {
     create,
     html_tag: function (tag, content) {
         console.log(`<${tag}>${content}</${tag}>`);
+    },
+    html_before_body: function () {
+        console.log(`<!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8" />
+            </head>
+            <body>
+        `);
+    },
+    html_after_body: function () {
+        console.log(`<!DOCTYPE html>
+            </body>
+            </html>
+        `);
     }
 }
 

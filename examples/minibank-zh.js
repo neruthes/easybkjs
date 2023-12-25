@@ -6,6 +6,9 @@ var myBook = easybkjs.create({
     symbol: '￥'
 });
 
+easybkjs.html_before_body();
+
+
 
 myBook.import({
     assets: {
@@ -60,4 +63,10 @@ myBook.date('2020-03-31');
 
 myBook.dump({ format: 'html' });
 myBook.dump({ format: 'json' });
+
+
+
+
+
+easybkjs.html_after_body();
 
