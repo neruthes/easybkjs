@@ -4,8 +4,14 @@ function create(config) {
 
 function the_real_constructor(config) {
     this.config = config;
-    this.config.logFormat = 'html';
-    this.ram = {};
+    this.ram = {
+        cashflow: {
+            main: {
+                in: 0,
+                out: 0
+            }
+        }
+    };
 };
 
 
@@ -33,41 +39,40 @@ function require_subject_field(bookObj, subjName, subjType) {
 function sanitize_amount(amount, decimals) {
     // Check if the amount is more precise than the specified decimals
     const precision = Math.pow(10, decimals);
-    if (Math.round(amount * precision) !== amount * precision) {
-        throw new Error(`Amount exceeds the specified precision of ${decimals} decimal places.`);
+    if (Math.abs(amount * precision) % 1 > 0.0001) {
+        throw new Error(`Amount ${amount} exceeds the specified precision of ${decimals} decimal places.`);
     }
 
     // Convert the amount to a fixed number of decimal places
     const formattedAmount = amount.toFixed(decimals);
 
-    // Add commas for thousands separators
+    // Add commas for thousands separators (NOT NOW)
     const parts = formattedAmount.split('.');
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-    // Add the sign (+ or -) for non-zero amounts
-    if (amount !== 0) {
-        parts[0] = amount < 0 ? '' + parts[0] : '+' + parts[0];
-    }
+
+    const presign = amount > 0 ? '+' : '';
 
     // Join the parts and return the formatted amount
-    return parts.join('.');
+    return presign + parts.join('.');
 }
 
 
 function print_log_line(bookObj, operation, subj1, subj2, amount1, amount2, comment) {
-    console.log(logline_formaters[bookObj.config.logFormat](bookObj, operation, subj1, subj2, amount1, amount2, comment));
+    // Add other log formats in future?
+    console.log(logline_formatters.html(bookObj, operation, subj1, subj2, amount1, amount2, comment));
 };
 
-const logline_formaters = {};
-logline_formaters.html = function (bookObj, operation, subj1, subj2, amount1, amount2, comment) {
+const logline_formatters = {};
+logline_formatters.html = function (bookObj, operation, subj1, subj2, amount1, amount2, comment) {
     // console.log(bookObj);
     return `<tr>
         <td>${bookObj.ram.date}</td>
         <td>${operation}</td>
-        <td>${subj1}</td>
-        <td>${sanitize_amount(amount1, 2)}</td>
-        <td>${subj2}</td>
-        <td>${sanitize_amount(amount2, 2)}</td>
+        <td>${subj1} (${bookObj.config.symbol})</td>
+        <td style="text-align: right;">${sanitize_amount(amount1, 2)}</td>
+        <td>${subj2} (${bookObj.config.symbol})</td>
+        <td style="text-align: right;">${sanitize_amount(amount2, 2)}</td>
         <td>${comment}</td>
     </tr>`;
 }
@@ -80,6 +85,7 @@ the_real_constructor.prototype.expand = function (subjA, subjD, amount, comment)
     require_subject_field(this, subjD, 'D');
     this.ram.current_balance_sheet.assets[subjA] += amount;
     this.ram.current_balance_sheet.debts[subjD] += amount;
+    fix_balance_sheet_dict_float_precision(this);
     print_log_line(this, 'Expand', subjA, subjD, amount, amount, comment);
 };
 the_real_constructor.prototype.shrink = function (subjA, subjD, amount, comment) {
@@ -90,6 +96,7 @@ the_real_constructor.prototype.shrink = function (subjA, subjD, amount, comment)
     require_subject_field(this, subjD, 'D');
     this.ram.current_balance_sheet.assets[subjA] += amount;
     this.ram.current_balance_sheet.debts[subjD] += amount;
+    fix_balance_sheet_dict_float_precision(this);
     print_log_line(this, 'Shrink', subjA, subjD, amount, amount, comment);
 };
 the_real_constructor.prototype.transferA = function (from, to, amount, comment) {
@@ -100,6 +107,7 @@ the_real_constructor.prototype.transferA = function (from, to, amount, comment) 
     require_subject_field(this, to, 'A');
     this.ram.current_balance_sheet.assets[from] -= amount;
     this.ram.current_balance_sheet.assets[to] += amount;
+    fix_balance_sheet_dict_float_precision(this);
     print_log_line(this, 'TransferA', from, to, -amount, amount, comment);
 };
 the_real_constructor.prototype.transferD = function (from, to, amount, comment) {
@@ -110,8 +118,22 @@ the_real_constructor.prototype.transferD = function (from, to, amount, comment) 
     require_subject_field(this, to, 'D');
     this.ram.current_balance_sheet.debts[from] -= amount;
     this.ram.current_balance_sheet.debts[to] += amount;
+    fix_balance_sheet_dict_float_precision(this);
     print_log_line(this, 'TransferD', from, to, -amount, amount, comment);
 };
+
+function fix_balance_sheet_dict_float_precision(bookObj) {
+    ['assets', 'debts'].forEach(function (colName) {
+        const dict = bookObj.ram.current_balance_sheet[colName];
+        // console.error(dict);
+        Object.keys(dict).forEach(function (key) {
+            bookObj.ram.current_balance_sheet[colName][key] = clarify_ieee_float(dict[key]);
+        });
+    });
+};
+
+
+
 
 
 the_real_constructor.prototype.dump = function (options) {
@@ -131,7 +153,8 @@ dump_formatters.html = function (current_balance_sheet) {
         <strong>Assets</strong>
         <table>
         <tbody>
-        ${Object.keys(current_balance_sheet.assets).map(key => `<tr><td>${key}</td><td>${current_balance_sheet.assets[key]}</td></tr>`).join('\n')}
+        ${Object.keys(current_balance_sheet.assets).map(key => `<tr><td>${key}</td><td>${sanitize_amount(clarify_ieee_float(current_balance_sheet.assets[key]), 2)
+        }</td></tr>`).join('\n')}
         </tbody>
         </table>
     </div>`);
@@ -139,12 +162,55 @@ dump_formatters.html = function (current_balance_sheet) {
         <strong>Debts</strong>
         <table>
         <tbody>
-        ${Object.keys(current_balance_sheet.debts).map(key => `<tr><td>${key}</td><td>${current_balance_sheet.debts[key]}</td></tr>`).join('\n')}
+        ${Object.keys(current_balance_sheet.debts).map(key => `<tr><td>${key}</td><td>${sanitize_amount(clarify_ieee_float(current_balance_sheet.debts[key]), 2)
+        }</td></tr>`).join('\n')}
         </tbody>
         </table>
     </div>`);
     console.log(`</div>`);
 };
+function clarify_ieee_float(num) {
+    const precision = 10000;
+    const output = Math.round(num * precision) / precision;
+    // console.error(`clarify_ieee_float:  ${num} -> ${output}`);
+    return output;
+};
+
+
+
+
+
+
+// And how do I track cashflow?
+the_real_constructor.prototype.cashIn = function (amount, group) {
+    group = group || 'main';
+    this.ram.cashflow[group].in = clarify_ieee_float(this.ram.cashflow[group].in + amount)
+};
+the_real_constructor.prototype.cashOut = function (amount, group) {
+    group = group || 'main';
+    this.ram.cashflow[group].out = clarify_ieee_float(this.ram.cashflow[group].out + amount)
+};
+the_real_constructor.prototype.cashDump = function () {
+    const print_cashflow_group_info_html = function (group, cash_in, cash_out, net_cash) {
+        console.log(`<div>
+            <strong>Cashflow group ${group}</strong><br>
+            cash_in ${sanitize_amount(cash_in, 2)}<br>
+            cash_in ${sanitize_amount(cash_out, 2)}<br>
+            net_cash ${sanitize_amount(net_cash, 2)}
+        </div>`);
+    };
+    const groups = Object.keys(this.ram.cashflow);
+    const cashflow_obj = this.ram.cashflow;
+    groups.forEach(function (group) {
+        const group_obj = cashflow_obj[group];
+        print_cashflow_group_info_html(group, group_obj.in, group_obj.out, group_obj.in - group_obj.out);
+    });
+};
+the_real_constructor.prototype.cashflowReset = function () {};
+
+
+
+
 
 
 
