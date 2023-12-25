@@ -36,7 +36,7 @@ easybkjs.html_tag('h3', '2020 JAN');
 easybkjs.html_table_header();
 
 myBook.date('2020-01-01');
-myBook.extend('Bank', '@', 10000, 'Investment from the founders');
+myBook.expand('Bank', '@', 10000, 'Investment from the founders');
 myBook.shrink('Cash', 'Debt', -100, 'Repay a debt');
 myBook.transferA('Bank', 'Cash', 250, 'Withdraw cash');
 

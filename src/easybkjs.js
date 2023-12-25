@@ -72,15 +72,15 @@ logline_formaters.html = function (bookObj, operation, subj1, subj2, amount1, am
     </tr>`;
 }
 
-the_real_constructor.prototype.extend = function (subjA, subjD, amount, comment) {
+the_real_constructor.prototype.expand = function (subjA, subjD, amount, comment) {
     if (amount < 0) {
-        throw new Error('Always give a positive number for extend amount!')
+        throw new Error('Always give a positive number for expand amount!')
     };
     require_subject_field(this, subjA, 'A');
     require_subject_field(this, subjD, 'D');
     this.ram.current_balance_sheet.assets[subjA] += amount;
     this.ram.current_balance_sheet.debts[subjD] += amount;
-    print_log_line(this, 'Extend', subjA, subjD, amount, amount, comment);
+    print_log_line(this, 'Expand', subjA, subjD, amount, amount, comment);
 };
 the_real_constructor.prototype.shrink = function (subjA, subjD, amount, comment) {
     if (amount > 0) {
