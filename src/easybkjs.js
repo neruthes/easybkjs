@@ -49,7 +49,7 @@ function require_subject_field(bookObj, subjName, subjType) {
 function sanitize_amount(amount, decimals) {
     // Check if the amount is more precise than the specified decimals
     const precision = Math.pow(10, decimals);
-    if (Math.abs(amount * precision) % 1 > 0.0001) {
+    if (Math.abs(Math.round(amount * precision) - amount * precision) > 0.1) {
         throw new Error(`Amount ${amount} exceeds the specified precision of ${decimals} decimal places.`);
     }
 
