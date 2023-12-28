@@ -37,7 +37,11 @@ easybkjs.html_tag('h1', '某某钱庄');
 
 
 
+
+// ================================================
 easybkjs.html_tag('h2', '2020');
+// ================================================
+
 myBook.section('2020 Q1', function () {
     myBook.date('2020-01-01');
     myBook.expand('现金', '@所有者权益', 0, '钱庄成立');
@@ -52,8 +56,6 @@ myBook.section('2020 Q1', function () {
 myBook.date('2020-03-31');
 myBook.dump({ format: 'html' });
 
-
-
 myBook.section('2020 Q2', function () {
     myBook.date('2020-04-06');
     myBook.expand('同业头寸', '储户.Alice', 378, '存入，Alice');
@@ -65,13 +67,9 @@ myBook.section('2020 Q2', function () {
     myBook.date('2020-06-01');
     myBook.transferD('储户.Bob', '储户.Alice', 600, '同行转账')
 });
-
-
-
 myBook.date('2020-06-30');
 myBook.dump({ format: 'html' });
 
-myBook.dump({ format: 'json' });
 
 
 
