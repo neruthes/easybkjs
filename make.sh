@@ -6,5 +6,8 @@ case $1 in
             node "$fn" > "${fn/.js/.html}"
             echo "Building '$fn' for '${fn/.js/.html}'"
         done
+        if [[ $USER == neruthes ]]; then
+            minoss examples/*.html
+        fi
         ;;
 esac

@@ -2,6 +2,10 @@ function create(config) {
     return new the_real_constructor(config);
 };
 
+function html_tag(tag, content) {
+    console.log(`<${tag}>${content}</${tag}>`);
+}
+
 function the_real_constructor(config) {
     this.config = config;
     this.ram = {
@@ -13,6 +17,12 @@ function the_real_constructor(config) {
         }
     };
 };
+
+
+
+
+
+
 
 
 the_real_constructor.prototype.date = function (dateStr) {
@@ -68,12 +78,11 @@ logline_formatters.html = function (bookObj, operation, subj1, subj2, amount1, a
     // console.log(bookObj);
     return `<tr>
         <td>${bookObj.ram.date}</td>
-        <td>${operation}</td>
         <td>${subj1}</td>
         <td style="text-align: right;">${sanitize_amount(amount1, 2)}</td>
         <td>${subj2}</td>
         <td style="text-align: right;">${sanitize_amount(amount2, 2)}</td>
-        <td>${comment}</td>
+        <td class="col-comment">${comment}</td>
     </tr>`;
 }
 
@@ -137,37 +146,44 @@ function fix_balance_sheet_dict_float_precision(bookObj) {
 
 
 the_real_constructor.prototype.dump = function (options) {
-    console.log(`<div><strong>Dump Snapshot ${this.ram.date}</strong></div>`);
-    dump_formatters[options.format](this.ram.current_balance_sheet)
+    console.log(`<div><h3>Balance Sheet Snapshot ${this.ram.date}</h3></div>`);
+    dump_formatters[options.format](this.ram.current_balance_sheet, this)
 };
 
 const dump_formatters = {};
-dump_formatters.json = function (current_balance_sheet) {
+dump_formatters.json = function (current_balance_sheet, bookObj) {
     console.log(`<pre>`);
     console.log(JSON.stringify(current_balance_sheet, '\t', 4))
     console.log(`</pre>`);
 };
-dump_formatters.html = function (current_balance_sheet) {
-    console.log(`<div>`);
-    console.log(`<div>
-        <strong>Assets</strong>
+dump_formatters.html = function (current_balance_sheet, bookObj) {
+    console.log(`<div>`); // Begin section
+    console.log(`<div style="float: left;">
         <table>
         <tbody>
-        ${Object.keys(current_balance_sheet.assets).map(key => `<tr><td>${key}</td><td>${sanitize_amount(clarify_ieee_float(current_balance_sheet.assets[key]), 2)
+        <tr>
+            <td><strong>Assets</strong></td>
+            <td style="text-align: right;">(${bookObj.config.symbol})</td>
+        </tr>
+        ${Object.keys(current_balance_sheet.assets).map(key => `<tr><td>${key}</td><td style="text-align: right;">${sanitize_amount(clarify_ieee_float(current_balance_sheet.assets[key]), 2)
         }</td></tr>`).join('\n')}
         </tbody>
         </table>
     </div>`);
-    console.log(`<div>
-        <strong>Debts</strong>
+    console.log(`<div style="float: left; margin-left: 15px;">
         <table>
         <tbody>
-        ${Object.keys(current_balance_sheet.debts).map(key => `<tr><td>${key}</td><td>${sanitize_amount(clarify_ieee_float(current_balance_sheet.debts[key]), 2)
+        <tr>
+            <td><strong>Debts</strong></td>
+            <td style="text-align: right;">(${bookObj.config.symbol})</td>
+        </tr>
+        ${Object.keys(current_balance_sheet.debts).map(key => `<tr><td>${key}</td><td style="text-align: right;">${sanitize_amount(clarify_ieee_float(current_balance_sheet.debts[key]), 2)
         }</td></tr>`).join('\n')}
         </tbody>
         </table>
     </div>`);
-    console.log(`</div>`);
+    console.log(`<div style="clear: both;"></div>`);
+    console.log(`</div>`); // End section
 };
 function clarify_ieee_float(num) {
     const precision = 10000;
@@ -193,9 +209,9 @@ the_real_constructor.prototype.cashOut = function (amount, group) {
 the_real_constructor.prototype.cashDump = function () {
     const print_cashflow_group_info_html = function (group, cash_in, cash_out, net_cash) {
         console.log(`<div>
-            <strong>Cashflow group ${group}</strong><br>
+            <h3>Cashflow group ${group}</h3>
             cash_in ${sanitize_amount(cash_in, 2)}<br>
-            cash_in ${sanitize_amount(cash_out, 2)}<br>
+            cash_out ${sanitize_amount(-cash_out, 2)}<br>
             net_cash ${sanitize_amount(net_cash, 2)}
         </div>`);
     };
@@ -210,19 +226,27 @@ the_real_constructor.prototype.cashflowReset = function () { };
 
 
 
+the_real_constructor.prototype.section = function (title, callback) {
+    // Use this method to divide sections
+    html_tag('h3', title);
+    this.html_table_header();
+    callback();
+    this.html_table_footer();
+};
+
+
 the_real_constructor.prototype.html_table_footer = function () {
     console.log(`</tbody></table>`);
 };
 the_real_constructor.prototype.html_table_header = function () {
-    console.log(`<table><tbody>`);
-    console.log(`<tr>
-        <td>Date</td>
-        <td>Operation</td>
-        <td>Subject 1</td>
-        <td>Amount 1 (${this.config.symbol})</td>
-        <td>Subject 2</td>
-        <td>Amount 2 (${this.config.symbol})</td>
-        <td>Comment</td>
+    console.log(`<table class="table-loglines"><tbody>`);
+    console.log(`<tr style="font-weight: bold;">
+        <th>Date</th>
+        <th>Subj 1</th>
+        <th style="text-align: right;">(${this.config.symbol})</th>
+        <th>Subj 2</th>
+        <th style="text-align: right;">(${this.config.symbol})</th>
+        <th>Comment</th>
     </tr>`);
 };
 
@@ -232,11 +256,14 @@ the_real_constructor.prototype.html_table_header = function () {
 
 
 
+
+
+
+
+
 module.exports = {
     create,
-    html_tag: function (tag, content) {
-        console.log(`<${tag}>${content}</${tag}>`);
-    },
+    html_tag,
     html_before_body: function () {
         console.log(`<!DOCTYPE html>
             <html>
@@ -244,13 +271,34 @@ module.exports = {
                 <meta charset="utf-8" />
             </head>
             <body>
+            <div id="container" style="max-width: 1000px; padding: 15px; margin: 0 auto;">
         `);
     },
     html_after_body: function () {
         console.log(`<!DOCTYPE html>
+            </div>
             </body>
             </html>
         `);
-    }
+    },
+    default_css: function() {
+        console.log(`<style>
+        html, body {
+            font-size: 14px;
+            font-variant-numeric: tabular-nums;
+        }
+        table th {
+            text-align: left;
+        }
+        table.table-loglines { width: 100%; overflow: scroll; }
+        table.table-loglines th:nth-child(-n+5) { width: 6.5rem; }
+        th, td { padding: 3px 7px; }
+        table, tr {
+            border: 1px solid #999;
+            border-collapse: collapse;
+        }
+        td.col-comment { font-size: 0.8em; }
+        </style>`);
+    },
 }
 
