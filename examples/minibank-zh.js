@@ -65,7 +65,7 @@ myBook.section('2020 Q2', function () {
     myBook.shrink('同业头寸', '储户.Alice', -899, '支付，Alice：生活账单代缴');
     myBook.shrink('同业头寸', '储户.Bob', -245, '支付，Bob：消费，淘宝代付');
     myBook.date('2020-06-01');
-    myBook.transferD('储户.Bob', '储户.Alice', 600, '同行转账')
+    myBook.transferD('储户.Bob', '储户.Alice', 600, '同行转账');
 });
 myBook.date('2020-06-30');
 myBook.dump({ format: 'html' });

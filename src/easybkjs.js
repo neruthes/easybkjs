@@ -86,7 +86,7 @@ logline_formatters.html = function (bookObj, operation, subj1, subj2, amount1, a
     </tr>`;
 }
 
-the_real_constructor.prototype.expand = function (subjA, subjD, amount, comment) {
+the_real_constructor.prototype.expand = function (subjA, subjD, amount, comment, omit_log) {
     if (amount < 0) {
         throw new Error('Always give a positive number for expand amount!')
     };
@@ -95,9 +95,9 @@ the_real_constructor.prototype.expand = function (subjA, subjD, amount, comment)
     this.ram.current_balance_sheet.assets[subjA] += amount;
     this.ram.current_balance_sheet.debts[subjD] += amount;
     fix_balance_sheet_dict_float_precision(this);
-    print_log_line(this, 'Expand', subjA, subjD, amount, amount, comment);
+    omit_log ? '' : print_log_line(this, 'Expand', subjA, subjD, amount, amount, comment);
 };
-the_real_constructor.prototype.shrink = function (subjA, subjD, amount, comment) {
+the_real_constructor.prototype.shrink = function (subjA, subjD, amount, comment, omit_log) {
     if (amount > 0) {
         throw new Error('Always give a negative number for shrink amount!')
     };
@@ -106,9 +106,9 @@ the_real_constructor.prototype.shrink = function (subjA, subjD, amount, comment)
     this.ram.current_balance_sheet.assets[subjA] += amount;
     this.ram.current_balance_sheet.debts[subjD] += amount;
     fix_balance_sheet_dict_float_precision(this);
-    print_log_line(this, 'Shrink', subjA, subjD, amount, amount, comment);
+    omit_log ? '' : print_log_line(this, 'Shrink', subjA, subjD, amount, amount, comment);
 };
-the_real_constructor.prototype.transferA = function (from, to, amount, comment) {
+the_real_constructor.prototype.transferA = function (from, to, amount, comment, omit_log) {
     if (amount < 0) {
         throw new Error('Always give a positive number for transfer amount!')
     };
@@ -117,9 +117,9 @@ the_real_constructor.prototype.transferA = function (from, to, amount, comment) 
     this.ram.current_balance_sheet.assets[from] -= amount;
     this.ram.current_balance_sheet.assets[to] += amount;
     fix_balance_sheet_dict_float_precision(this);
-    print_log_line(this, 'TransferA', from, to, -amount, amount, comment);
+    omit_log ? '' : print_log_line(this, 'TransferA', from, to, -amount, amount, comment);
 };
-the_real_constructor.prototype.transferD = function (from, to, amount, comment) {
+the_real_constructor.prototype.transferD = function (from, to, amount, comment, omit_log) {
     if (amount < 0) {
         throw new Error('Always give a positive number for transfer amount!')
     };
@@ -128,7 +128,7 @@ the_real_constructor.prototype.transferD = function (from, to, amount, comment) 
     this.ram.current_balance_sheet.debts[from] -= amount;
     this.ram.current_balance_sheet.debts[to] += amount;
     fix_balance_sheet_dict_float_precision(this);
-    print_log_line(this, 'TransferD', from, to, -amount, amount, comment);
+    omit_log ? '' : print_log_line(this, 'TransferD', from, to, -amount, amount, comment);
 };
 
 function fix_balance_sheet_dict_float_precision(bookObj) {
