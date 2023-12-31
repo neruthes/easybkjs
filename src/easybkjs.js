@@ -79,9 +79,9 @@ logline_formatters.html = function (bookObj, operation, subj1, subj2, amount1, a
     return `<tr>
         <td>${bookObj.ram.date}</td>
         <td>${subj1}</td>
-        <td style="text-align: right;">${sanitize_amount(amount1, 2)}</td>
+        <td class="col-amount">${sanitize_amount(amount1, 2)}</td>
         <td>${subj2}</td>
-        <td style="text-align: right;">${sanitize_amount(amount2, 2)}</td>
+        <td class="col-amount">${sanitize_amount(amount2, 2)}</td>
         <td class="col-comment">${comment}</td>
     </tr>`;
 }
@@ -165,7 +165,7 @@ dump_formatters.html = function (current_balance_sheet, bookObj) {
             <td><strong>Assets</strong></td>
             <td style="text-align: right;">(${bookObj.config.symbol})</td>
         </tr>
-        ${Object.keys(current_balance_sheet.assets).map(key => `<tr><td>${key}</td><td style="text-align: right;">${sanitize_amount(clarify_ieee_float(current_balance_sheet.assets[key]), 2)
+        ${Object.keys(current_balance_sheet.assets).map(key => `<tr><td>${key}</td><td class="col-amount">${sanitize_amount(clarify_ieee_float(current_balance_sheet.assets[key]), 2)
         }</td></tr>`).join('\n')}
         </tbody>
         </table>
@@ -177,7 +177,7 @@ dump_formatters.html = function (current_balance_sheet, bookObj) {
             <td><strong>Debts</strong></td>
             <td style="text-align: right;">(${bookObj.config.symbol})</td>
         </tr>
-        ${Object.keys(current_balance_sheet.debts).map(key => `<tr><td>${key}</td><td style="text-align: right;">${sanitize_amount(clarify_ieee_float(current_balance_sheet.debts[key]), 2)
+        ${Object.keys(current_balance_sheet.debts).map(key => `<tr><td>${key}</td><td class="col-amount">${sanitize_amount(clarify_ieee_float(current_balance_sheet.debts[key]), 2)
         }</td></tr>`).join('\n')}
         </tbody>
         </table>
@@ -264,17 +264,21 @@ the_real_constructor.prototype.html_table_header = function () {
 module.exports = {
     create,
     html_tag,
-    html_before_body: function () {
+    begin_document: function (options) {
+        options = options || {
+            title: 'Untitled Account Book'
+        };
         console.log(`<!DOCTYPE html>
             <html>
             <head>
                 <meta charset="utf-8" />
+                <title>${options.title}</title>
             </head>
             <body>
             <div id="container" style="max-width: 1000px; padding: 15px; margin: 0 auto;">
         `);
     },
-    html_after_body: function () {
+    end_document: function () {
         console.log(`<!DOCTYPE html>
             </div>
             </body>
@@ -287,18 +291,33 @@ module.exports = {
             font-size: 14px;
             font-variant-numeric: tabular-nums;
         }
+        h1 { padding: 60px 0 30px; }
+        h2 { border-bottom: 1px solid #999; padding: 10px 0 10px; margin: 40px 0 20px; }
         table th {
             text-align: left;
         }
         table.table-loglines { width: 100%; overflow: scroll; }
         table.table-loglines th:nth-child(-n+5) { width: 6.5rem; }
-        th, td { padding: 3px 7px; }
+        th, td { padding: 3px 11px; }
         table, tr {
             border: 1px solid #999;
             border-collapse: collapse;
         }
         td.col-comment { font-size: 0.8em; }
+        td.col-amount { text-align: right; }
+        td.col-amount.amount-negative { color: red; }
         </style>`);
+    },
+    default_js: function() {
+        console.log(`<script>
+        window.addEventListener('load', function () {
+            document.querySelectorAll('table td.col-amount').forEach(function (td) {
+                if (td.innerText[0] === '-') {
+                    td.classList.add('amount-negative');
+                };
+            });
+        });
+        </script>`);
     },
 }
 

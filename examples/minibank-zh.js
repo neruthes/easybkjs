@@ -7,7 +7,7 @@ var myBook = easybkjs.create({
     symbol: '￥'
 });
 
-easybkjs.html_before_body();
+easybkjs.begin_document();
 
 
 
@@ -28,6 +28,7 @@ myBook.import({
 
 
 easybkjs.default_css();
+easybkjs.default_js();
 
 
 
@@ -75,5 +76,5 @@ myBook.dump({ format: 'html' });
 
 
 
-easybkjs.html_after_body();
+easybkjs.end_document();
 
