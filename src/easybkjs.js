@@ -289,7 +289,6 @@ module.exports = {
         console.log(`<style>
         html, body {
             font-size: 14px;
-            font-variant-numeric: tabular-nums;
         }
         h1 { padding: 60px 0 30px; }
         h2 { border-bottom: 1px solid #999; padding: 10px 0 10px; margin: 40px 0 20px; }
@@ -303,6 +302,7 @@ module.exports = {
             border: 1px solid #999;
             border-collapse: collapse;
         }
+        table td { font-variant-numeric: tabular-nums; }
         td.col-comment { font-size: 0.8em; }
         td.col-amount { text-align: right; }
         td.col-amount.amount-negative { color: red; }
