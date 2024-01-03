@@ -17,13 +17,15 @@
             text-align: left;
         }
         table.table-loglines { width: 100%; overflow: scroll; }
-        table.table-loglines th:nth-child(-n+5) { width: 6.5rem; }
         th, td { padding: 3px 11px; }
+        th.th-date { width: 7rem; }
+        th.th-subj1, th.th-subj2 { width: 6.5rem; }
+        th.th-value1, th.th-value2 { width: 5.5rem; text-align: right; }
         table, tr {
             border: 1px solid #999;
             border-collapse: collapse;
         }
-        table td { font-variant-numeric: tabular-nums; }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
         td.col-comment { font-size: 0.8em; }
         td.col-amount { text-align: right; }
         td.col-amount.amount-negative { color: red; }
@@ -42,51 +44,51 @@
 <h3>2020 Q1</h3>
 <table class="table-loglines"><tbody>
 <tr style="font-weight: bold;">
-        <th>Date</th>
-        <th>Subj 1</th>
-        <th style="text-align: right;">(￥)</th>
-        <th>Subj 2</th>
-        <th style="text-align: right;">(￥)</th>
-        <th>Comment</th>
+        <th class="th-date">Date</th>
+        <th class="th-subj1">Subj 1</th>
+        <th class="th-value1">(￥)</th>
+        <th class="th-subj2">Subj 2</th>
+        <th class="th-value2">(￥)</th>
+        <th class="th-comment">Comment</th>
     </tr>
 <tr>
-        <td>2020-01-01</td>
+        <td class="tabular-nums">2020-01-01</td>
         <td>现金</td>
-        <td class="col-amount">0.00</td>
+        <td class="col-amount tabular-nums">0.00</td>
         <td>@所有者权益</td>
-        <td class="col-amount">0.00</td>
+        <td class="col-amount tabular-nums">0.00</td>
         <td class="col-comment">钱庄成立</td>
     </tr>
 <tr>
-        <td>2020-02-02</td>
+        <td class="tabular-nums">2020-02-02</td>
         <td>同业头寸</td>
-        <td class="col-amount">+1,500.00</td>
+        <td class="col-amount tabular-nums">+1,500.00</td>
         <td>储户.Alice</td>
-        <td class="col-amount">+1,500.00</td>
+        <td class="col-amount tabular-nums">+1,500.00</td>
         <td class="col-comment">存入，Alice</td>
     </tr>
 <tr>
-        <td>2020-02-02</td>
+        <td class="tabular-nums">2020-02-02</td>
         <td>同业头寸</td>
-        <td class="col-amount">+900.00</td>
+        <td class="col-amount tabular-nums">+900.00</td>
         <td>储户.Bob</td>
-        <td class="col-amount">+900.00</td>
+        <td class="col-amount tabular-nums">+900.00</td>
         <td class="col-comment">存入，Bob</td>
     </tr>
 <tr>
-        <td>2020-03-12</td>
+        <td class="tabular-nums">2020-03-12</td>
         <td>同业头寸</td>
-        <td class="col-amount">-1,321.10</td>
+        <td class="col-amount tabular-nums">-1,321.10</td>
         <td>储户.Alice</td>
-        <td class="col-amount">-1,321.10</td>
+        <td class="col-amount tabular-nums">-1,321.10</td>
         <td class="col-comment">支付，Alice：生活账单代缴</td>
     </tr>
 <tr>
-        <td>2020-03-12</td>
+        <td class="tabular-nums">2020-03-12</td>
         <td>同业头寸</td>
-        <td class="col-amount">-37.50</td>
+        <td class="col-amount tabular-nums">-37.50</td>
         <td>储户.Bob</td>
-        <td class="col-amount">-37.50</td>
+        <td class="col-amount tabular-nums">-37.50</td>
         <td class="col-comment">支付，Bob：消费，淘宝代付</td>
     </tr>
 </tbody></table>
@@ -96,13 +98,13 @@
         <table>
         <tbody>
         <tr>
-            <td><strong>Assets</strong></td>
-            <td style="text-align: right;">(￥)</td>
+            <th>Assets</th>
+            <th style="font-weight: bold; text-align: right;">(￥)</th>
         </tr>
-        <tr><td>现金</td><td class="col-amount">0.00</td></tr>
-<tr><td>同业头寸</td><td class="col-amount">+1,041.40</td></tr>
-<tr><td>短期债权</td><td class="col-amount">0.00</td></tr>
-<tr><td>长期债权</td><td class="col-amount">0.00</td></tr>
+        <tr><td>现金</td><td class="col-amount tabular-nums">0.00</td></tr>
+<tr><td>同业头寸</td><td class="col-amount tabular-nums">+1,041.40</td></tr>
+<tr><td>短期债权</td><td class="col-amount tabular-nums">0.00</td></tr>
+<tr><td>长期债权</td><td class="col-amount tabular-nums">0.00</td></tr>
         </tbody>
         </table>
     </div>
@@ -110,13 +112,13 @@
         <table>
         <tbody>
         <tr>
-            <td><strong>Debts</strong></td>
-            <td style="text-align: right;">(￥)</td>
+            <th>Debts</th>
+            <th style="font-weight: bold; text-align: right;">(￥)</th>
         </tr>
-        <tr><td>储户.Alice</td><td class="col-amount">+178.90</td></tr>
-<tr><td>储户.Bob</td><td class="col-amount">+862.50</td></tr>
-<tr><td>应付账款</td><td class="col-amount">0.00</td></tr>
-<tr><td>@所有者权益</td><td class="col-amount">0.00</td></tr>
+        <tr><td>储户.Alice</td><td class="col-amount tabular-nums">+178.90</td></tr>
+<tr><td>储户.Bob</td><td class="col-amount tabular-nums">+862.50</td></tr>
+<tr><td>应付账款</td><td class="col-amount tabular-nums">0.00</td></tr>
+<tr><td>@所有者权益</td><td class="col-amount tabular-nums">0.00</td></tr>
         </tbody>
         </table>
     </div>
@@ -125,51 +127,51 @@
 <h3>2020 Q2</h3>
 <table class="table-loglines"><tbody>
 <tr style="font-weight: bold;">
-        <th>Date</th>
-        <th>Subj 1</th>
-        <th style="text-align: right;">(￥)</th>
-        <th>Subj 2</th>
-        <th style="text-align: right;">(￥)</th>
-        <th>Comment</th>
+        <th class="th-date">Date</th>
+        <th class="th-subj1">Subj 1</th>
+        <th class="th-value1">(￥)</th>
+        <th class="th-subj2">Subj 2</th>
+        <th class="th-value2">(￥)</th>
+        <th class="th-comment">Comment</th>
     </tr>
 <tr>
-        <td>2020-04-06</td>
+        <td class="tabular-nums">2020-04-06</td>
         <td>同业头寸</td>
-        <td class="col-amount">+378.00</td>
+        <td class="col-amount tabular-nums">+378.00</td>
         <td>储户.Alice</td>
-        <td class="col-amount">+378.00</td>
+        <td class="col-amount tabular-nums">+378.00</td>
         <td class="col-comment">存入，Alice</td>
     </tr>
 <tr>
-        <td>2020-04-06</td>
+        <td class="tabular-nums">2020-04-06</td>
         <td>同业头寸</td>
-        <td class="col-amount">+1,155.00</td>
+        <td class="col-amount tabular-nums">+1,155.00</td>
         <td>储户.Bob</td>
-        <td class="col-amount">+1,155.00</td>
+        <td class="col-amount tabular-nums">+1,155.00</td>
         <td class="col-comment">存入，Bob</td>
     </tr>
 <tr>
-        <td>2020-05-19</td>
+        <td class="tabular-nums">2020-05-19</td>
         <td>同业头寸</td>
-        <td class="col-amount">-899.00</td>
+        <td class="col-amount tabular-nums">-899.00</td>
         <td>储户.Alice</td>
-        <td class="col-amount">-899.00</td>
+        <td class="col-amount tabular-nums">-899.00</td>
         <td class="col-comment">支付，Alice：生活账单代缴</td>
     </tr>
 <tr>
-        <td>2020-05-19</td>
+        <td class="tabular-nums">2020-05-19</td>
         <td>同业头寸</td>
-        <td class="col-amount">-245.00</td>
+        <td class="col-amount tabular-nums">-245.00</td>
         <td>储户.Bob</td>
-        <td class="col-amount">-245.00</td>
+        <td class="col-amount tabular-nums">-245.00</td>
         <td class="col-comment">支付，Bob：消费，淘宝代付</td>
     </tr>
 <tr>
-        <td>2020-06-01</td>
+        <td class="tabular-nums">2020-06-01</td>
         <td>储户.Bob</td>
-        <td class="col-amount">-600.00</td>
+        <td class="col-amount tabular-nums">-600.00</td>
         <td>储户.Alice</td>
-        <td class="col-amount">+600.00</td>
+        <td class="col-amount tabular-nums">+600.00</td>
         <td class="col-comment">同行转账</td>
     </tr>
 </tbody></table>
@@ -179,13 +181,13 @@
         <table>
         <tbody>
         <tr>
-            <td><strong>Assets</strong></td>
-            <td style="text-align: right;">(￥)</td>
+            <th>Assets</th>
+            <th style="font-weight: bold; text-align: right;">(￥)</th>
         </tr>
-        <tr><td>现金</td><td class="col-amount">0.00</td></tr>
-<tr><td>同业头寸</td><td class="col-amount">+1,430.40</td></tr>
-<tr><td>短期债权</td><td class="col-amount">0.00</td></tr>
-<tr><td>长期债权</td><td class="col-amount">0.00</td></tr>
+        <tr><td>现金</td><td class="col-amount tabular-nums">0.00</td></tr>
+<tr><td>同业头寸</td><td class="col-amount tabular-nums">+1,430.40</td></tr>
+<tr><td>短期债权</td><td class="col-amount tabular-nums">0.00</td></tr>
+<tr><td>长期债权</td><td class="col-amount tabular-nums">0.00</td></tr>
         </tbody>
         </table>
     </div>
@@ -193,13 +195,13 @@
         <table>
         <tbody>
         <tr>
-            <td><strong>Debts</strong></td>
-            <td style="text-align: right;">(￥)</td>
+            <th>Debts</th>
+            <th style="font-weight: bold; text-align: right;">(￥)</th>
         </tr>
-        <tr><td>储户.Alice</td><td class="col-amount">+257.90</td></tr>
-<tr><td>储户.Bob</td><td class="col-amount">+1,172.50</td></tr>
-<tr><td>应付账款</td><td class="col-amount">0.00</td></tr>
-<tr><td>@所有者权益</td><td class="col-amount">0.00</td></tr>
+        <tr><td>储户.Alice</td><td class="col-amount tabular-nums">+257.90</td></tr>
+<tr><td>储户.Bob</td><td class="col-amount tabular-nums">+1,172.50</td></tr>
+<tr><td>应付账款</td><td class="col-amount tabular-nums">0.00</td></tr>
+<tr><td>@所有者权益</td><td class="col-amount tabular-nums">0.00</td></tr>
         </tbody>
         </table>
     </div>

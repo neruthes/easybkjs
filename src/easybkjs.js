@@ -77,11 +77,11 @@ const logline_formatters = {};
 logline_formatters.html = function (bookObj, operation, subj1, subj2, amount1, amount2, comment) {
     // console.log(bookObj);
     return `<tr>
-        <td>${bookObj.ram.date}</td>
+        <td class="tabular-nums">${bookObj.ram.date}</td>
         <td>${subj1}</td>
-        <td class="col-amount">${sanitize_amount(amount1, 2)}</td>
+        <td class="col-amount tabular-nums">${sanitize_amount(amount1, 2)}</td>
         <td>${subj2}</td>
-        <td class="col-amount">${sanitize_amount(amount2, 2)}</td>
+        <td class="col-amount tabular-nums">${sanitize_amount(amount2, 2)}</td>
         <td class="col-comment">${comment}</td>
     </tr>`;
 }
@@ -162,10 +162,10 @@ dump_formatters.html = function (current_balance_sheet, bookObj) {
         <table>
         <tbody>
         <tr>
-            <td><strong>Assets</strong></td>
-            <td style="text-align: right;">(${bookObj.config.symbol})</td>
+            <th>Assets</th>
+            <th style="font-weight: bold; text-align: right;">(${bookObj.config.symbol})</th>
         </tr>
-        ${Object.keys(current_balance_sheet.assets).map(key => `<tr><td>${key}</td><td class="col-amount">${sanitize_amount(clarify_ieee_float(current_balance_sheet.assets[key]), 2)
+        ${Object.keys(current_balance_sheet.assets).map(key => `<tr><td>${key}</td><td class="col-amount tabular-nums">${sanitize_amount(clarify_ieee_float(current_balance_sheet.assets[key]), 2)
         }</td></tr>`).join('\n')}
         </tbody>
         </table>
@@ -174,10 +174,10 @@ dump_formatters.html = function (current_balance_sheet, bookObj) {
         <table>
         <tbody>
         <tr>
-            <td><strong>Debts</strong></td>
-            <td style="text-align: right;">(${bookObj.config.symbol})</td>
+            <th>Debts</th>
+            <th style="font-weight: bold; text-align: right;">(${bookObj.config.symbol})</th>
         </tr>
-        ${Object.keys(current_balance_sheet.debts).map(key => `<tr><td>${key}</td><td class="col-amount">${sanitize_amount(clarify_ieee_float(current_balance_sheet.debts[key]), 2)
+        ${Object.keys(current_balance_sheet.debts).map(key => `<tr><td>${key}</td><td class="col-amount tabular-nums">${sanitize_amount(clarify_ieee_float(current_balance_sheet.debts[key]), 2)
         }</td></tr>`).join('\n')}
         </tbody>
         </table>
@@ -241,12 +241,12 @@ the_real_constructor.prototype.html_table_footer = function () {
 the_real_constructor.prototype.html_table_header = function () {
     console.log(`<table class="table-loglines"><tbody>`);
     console.log(`<tr style="font-weight: bold;">
-        <th>Date</th>
-        <th>Subj 1</th>
-        <th style="text-align: right;">(${this.config.symbol})</th>
-        <th>Subj 2</th>
-        <th style="text-align: right;">(${this.config.symbol})</th>
-        <th>Comment</th>
+        <th class="th-date">Date</th>
+        <th class="th-subj1">Subj 1</th>
+        <th class="th-value1">(${this.config.symbol})</th>
+        <th class="th-subj2">Subj 2</th>
+        <th class="th-value2">(${this.config.symbol})</th>
+        <th class="th-comment">Comment</th>
     </tr>`);
 };
 
@@ -296,13 +296,15 @@ module.exports = {
             text-align: left;
         }
         table.table-loglines { width: 100%; overflow: scroll; }
-        table.table-loglines th:nth-child(-n+5) { width: 6.5rem; }
         th, td { padding: 3px 11px; }
+        th.th-date { width: 7rem; }
+        th.th-subj1, th.th-subj2 { width: 6.5rem; }
+        th.th-value1, th.th-value2 { width: 5.5rem; text-align: right; }
         table, tr {
             border: 1px solid #999;
             border-collapse: collapse;
         }
-        table td { font-variant-numeric: tabular-nums; }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
         td.col-comment { font-size: 0.8em; }
         td.col-amount { text-align: right; }
         td.col-amount.amount-negative { color: red; }
