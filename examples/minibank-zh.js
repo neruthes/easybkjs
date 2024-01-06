@@ -7,7 +7,7 @@ var myBook = easybkjs.create({
     symbol: '￥'
 });
 
-easybkjs.begin_document();
+easybkjs.begin_document({ title: 'Some Bank' });
 
 
 

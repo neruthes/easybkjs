@@ -8,6 +8,7 @@ case $1 in
         done
         if [[ $USER == neruthes ]]; then
             minoss examples/*.html
+            cfoss examples/*.html
         fi
         ;;
 esac
