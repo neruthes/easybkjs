@@ -38,6 +38,12 @@ the_real_constructor.prototype.import = function (dataObj) {
     this.ram.subjectsA = Object.keys(dataObj.assets);
     this.ram.subjectsD = Object.keys(dataObj.debts);
 };
+the_real_constructor.prototype.queryA = function (fieldName) {
+    return this.ram.current_balance_sheet.assets[fieldName];
+};
+the_real_constructor.prototype.queryD = function (fieldName) {
+    return this.ram.current_balance_sheet.debts[fieldName];
+};
 
 function require_subject_field(bookObj, subjName, subjType) {
     // Throw error when subjName is not available
