@@ -52,6 +52,23 @@ function require_subject_field(bookObj, subjName, subjType) {
     };
 };
 
+function render_sanitized_amount_str(amount_str, nums_render_style) {
+    nums_render_style = nums_render_style || 'plain';
+    // Supported styles: 
+    //      plain               Verbatim output
+    //      parentheses         Put negative values into a pair of parentheses
+    if (nums_render_style === 'plain') {
+        return amount_str
+    };
+    if (nums_render_style === 'parentheses') {
+        if (amount_str.indexOf('-') < 0) {
+            return amount_str.replace('+', '');
+        } else {
+            return amount_str.replace('-', '(') + ')';
+        };
+    };
+}
+
 function sanitize_amount(amount, decimals) {
     // Check if the amount is more precise than the specified decimals
     const precision = Math.pow(10, decimals);
@@ -85,9 +102,9 @@ logline_formatters.html = function (bookObj, operation, subj1, subj2, amount1, a
     return `<tr>
         <td class="tabular-nums">${bookObj.ram.date}</td>
         <td>${subj1}</td>
-        <td class="col-amount tabular-nums">${sanitize_amount(amount1, 2)}</td>
+        <td class="col-amount tabular-nums">${render_sanitized_amount_str(sanitize_amount(amount1, 2), bookObj.config.nums_render_style)}</td>
         <td>${subj2}</td>
-        <td class="col-amount tabular-nums">${sanitize_amount(amount2, 2)}</td>
+        <td class="col-amount tabular-nums">${render_sanitized_amount_str(sanitize_amount(amount2, 2), bookObj.config.nums_render_style)}</td>
         <td class="col-comment">${comment}</td>
     </tr>`;
 }
@@ -291,7 +308,7 @@ module.exports = {
             </html>
         `);
     },
-    default_css: function() {
+    default_css: function () {
         console.log(`<style>
         html, body {
             font-size: 14px;
@@ -316,7 +333,7 @@ module.exports = {
         td.col-amount.amount-negative { color: red; }
         </style>`);
     },
-    default_js: function() {
+    default_js: function () {
         console.log(`<script>
         window.addEventListener('load', function () {
             document.querySelectorAll('table td.col-amount').forEach(function (td) {
