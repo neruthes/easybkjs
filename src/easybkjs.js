@@ -57,8 +57,12 @@ function render_sanitized_amount_str(amount_str, nums_render_style) {
     // Supported styles: 
     //      plain               Verbatim output
     //      parentheses         Put negative values into a pair of parentheses
+    //      compute             Call a custom anonymous function
     if (nums_render_style === 'plain') {
-        return amount_str
+        return amount_str;
+    };
+    if (nums_render_style === 'compute') {
+        return config.nums_render_function(amount_str);
     };
     if (nums_render_style === 'parentheses') {
         if (amount_str.indexOf('-') < 0) {
