@@ -1,1 +1,6 @@
 .tmp
+
+# Yarn stuff
+.yarn
+.pnp.*
+yarn.lock
