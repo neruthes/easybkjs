@@ -1,5 +1,6 @@
 {
   "name": "easybkjs",
   "version": "0.1.0",
+  "index": "src/easybkjs",
   "packageManager": "yarn@4.3.1"
 }
